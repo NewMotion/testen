@@ -15,7 +15,11 @@ libraryDependencies ++= Seq(
 
 releaseSettings
 
-publishTo := Some("thenewmotion-nexus" at "http://nexus.thenewmotion.com/content/repositories/releases-public")
+publishTo <<= version { (v: String) =>
+  val nexus = "http://nexus.thenewmotion.com/"
+  if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots-public")
+  else                             Some("releases"  at nexus + "content/repositories/releases-public")
+}
 
 publishMavenStyle := true
 
