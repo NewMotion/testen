@@ -23,5 +23,14 @@ publishTo <<= version { (v: String) =>
 
 publishMavenStyle := true
 
+pomExtra :=
+<licenses>
+    <license>
+        <name>Apache License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        <distribution>repo</distribution>
+    </license>
+</licenses>
+
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
