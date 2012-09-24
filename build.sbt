@@ -14,3 +14,10 @@ libraryDependencies ++= Seq(
 )
 
 releaseSettings
+
+publishTo := Some("thenewmotion-nexus" at "http://nexus.thenewmotion.com/content/repositories/releases-public")
+
+publishMavenStyle := true
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+
