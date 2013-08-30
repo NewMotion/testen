@@ -4,6 +4,7 @@ import org.specs2.matcher._
 import net.liftweb.common._
 import net.liftweb.http._
 import com.thenewmotion.testen.lift.LiftMatchers._
+import net.liftweb.json.parse
 
 trait LiftMatchers extends Matchers with Expectations with MustExpectations {
 
@@ -15,13 +16,13 @@ trait LiftMatchers extends Matchers with Expectations with MustExpectations {
 
   def bePresent = new Matcher[Box[LiftResponse]] {
     def apply[S <: Box[LiftResponse]](value: Expectable[S]) = value.value match {
-      case Full(r)             => result(true, "Present response meets all expectations", "", value)
-      case Empty               => result(false, "", "No response available", value)
-      case Failure(msg, e, ch) => result(false, "", "Failure occured during request serve %s".format(msg), value)
+      case Full(r)             => result(test = true, "Present response meets all expectations", "", value)
+      case Empty               => result(test = false, "", "No response available", value)
+      case Failure(msg, e, ch) => result(test = false, "", "Failure occured during request serve %s".format(msg), value)
     }
   }
 
-  val ifPresent = { (b: Box[LiftResponse]) => b.open_! }
+  val ifPresent = { (b: Box[LiftResponse]) => b.openOrThrowException("test") }
 
 }
 
@@ -29,7 +30,7 @@ object LiftMatchers {
 
   val NoResponseToMatchMatcher = new Matcher[LiftResponse] {
     def apply[S <: LiftResponse](value: Expectable[S]) =
-      result(false, "", "No Response to match", value)
+      result(test = false, "", "No Response to match", value)
   }
 
   class BeServedBy(dpf: LiftRules.DispatchPF) extends Matcher[Req] {
@@ -51,21 +52,19 @@ object LiftMatchers {
     }
   }
 
-  class HaveExactJson(json: String) extends Matcher[LiftResponse] {
-    def apply[S <: LiftResponse](value: Expectable[S]) = {
-      if (value.value.isInstanceOf[JsonResponse]) {
-        val expected = json
-        val actual = value.value.asInstanceOf[JsonResponse].json.toJsCmd
-        result(actual == expected,
+  class HaveExactJson(expected: String) extends Matcher[LiftResponse] {
+    def apply[S <: LiftResponse](value: Expectable[S]) = value.value match {
+      case res: JsonResponse =>
+        val actual = res.json.toJsCmd
+        result(parse(actual) == parse(expected),
           "Response has expected json",
           "Response has not expected json",
           value, expected, actual)
-      } else {
-        result(false,
-          value.description + " is json response ",
-          value.description + " is not json response",
-          value)
-      }
+
+      case _ => result(test = false,
+        value.description + " is json response ",
+        value.description + " is not json response",
+        value)
     }
   }
 }

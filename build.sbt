@@ -2,14 +2,15 @@ organization := "com.thenewmotion"
 
 name := "testen"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.2"
 
 libraryDependencies ++= Seq(
-  "org.specs2"  %% "specs2"            % "1.12.1",
-  "net.liftweb" %  "lift-webkit_2.9.1" % "2.4",
-  "net.liftweb" %  "lift-common_2.9.1" % "2.4",
-  "org.mockito" %  "mockito-all"       % "1.9.0"
-)
+  "org.specs2"  %% "specs2"      % "2.1.1",
+  "net.liftweb" %% "lift-webkit" % "2.5.1",
+  "net.liftweb" %% "lift-common" % "2.5.1",
+  "org.mockito" %  "mockito-all" % "1.9.5")
+
+scalacOptions := Seq("-encoding", "UTF-8", "-unchecked", "-deprecation", "-feature")
 
 releaseSettings
 
