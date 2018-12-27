@@ -15,7 +15,7 @@ scalacOptions := Seq("-encoding", "UTF-8", "-unchecked", "-deprecation", "-featu
 releaseSettings
 
 publishTo <<= version { (v: String) =>
-  val nexus = "http://nexus.thenewmotion.com/"
+  val nexus = "https://nexus.thenewmotion.com/"
   if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots-public")
   else                             Some("releases"  at nexus + "content/repositories/releases-public")
 }
